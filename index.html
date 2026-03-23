@@ -1,27 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Minecraft Server Control</title>
-</head>
-<body>
-  <h1>Minecraft Server Control</h1>
-  <button id="startButton">Start Server</button>
-  <p id="status"></p>
-
-  <script>
-    const button = document.getElementById("startButton");
-    const statusEl = document.getElementById("status");
-
-    button.addEventListener("click", async () => {
-      statusEl.innerText = "Triggering workflow...";
-      try {
-        const response = await fetch("/api/trigger", { method: "POST" });
-        const data = await response.json();
-        statusEl.innerText = data.status || JSON.stringify(data);
-      } catch (err) {
-        statusEl.innerText = "Error: " + err.message;
-      }
-    });
-  </script>
-</body>
-</html>
+<button id="startButton">Start Server</button>
+<p id="status"></p>
+<script>
+document.getElementById("startButton").addEventListener("click", async () => {
+  const statusEl = document.getElementById("status");
+  statusEl.innerText = "Triggering workflow...";
+  try {
+    const response = await fetch("/api/trigger", { method: "POST" });
+    const data = await response.json();
+    statusEl.innerText = data.status || JSON.stringify(data);
+  } catch (err) {
+    statusEl.innerText = "Error: " + err.message;
+  }
+});
+</script>
