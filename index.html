@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MC Server Starter</title>
+</head>
+<body>
+    <h1>Minecraft Server Control</h1>
+    <button onclick="triggerWorkflow()">Start Server</button>
+
+    <p id="status"></p>
+
+    <script>
+        async function triggerWorkflow() {
+            const statusEl = document.getElementById('status');
+            statusEl.innerText = "Triggering workflow...";
+            try {
+                const response = await fetch('/api/trigger', { method: 'POST' });
+                const data = await response.json();
+                statusEl.innerText = JSON.stringify(data);
+            } catch (err) {
+                statusEl.innerText = "Error: " + err;
+            }
+        }
+    </script>
+</body>
+</html>
