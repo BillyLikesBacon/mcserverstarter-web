@@ -1,15 +1,60 @@
-<button id="startButton">Start Server</button>
-<p id="status"></p>
-<script>
-document.getElementById("startButton").addEventListener("click", async () => {
-  const statusEl = document.getElementById("status");
-  statusEl.innerText = "Triggering workflow...";
-  try {
-    const response = await fetch("/api/trigger", { method: "POST" });
-    const data = await response.json();
-    statusEl.innerText = data.status || JSON.stringify(data);
-  } catch (err) {
-    statusEl.innerText = "Error: " + err.message;
-  }
-});
-</script>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Minecraft Server Control</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1b1b1b;
+      color: #fff;
+      text-align: center;
+      padding-top: 100px;
+    }
+    h1 { margin-bottom: 50px; }
+    button {
+      background: #4caf50;
+      color: white;
+      border: none;
+      padding: 20px 40px;
+      margin: 20px;
+      font-size: 1.5em;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover { background: #45a049; }
+    button.stop { background: #f44336; }
+    button.stop:hover { background: #da190b; }
+    #status { margin-top: 40px; font-size: 1.2em; }
+  </style>
+</head>
+<body>
+  <h1>Minecraft Server Control</h1>
+  <button id="startBtn">Start Server</button>
+  <button id="stopBtn" class="stop">Stop Server</button>
+  <p id="status"></p>
+
+  <script>
+    const statusEl = document.getElementById("status");
+
+    async function triggerWorkflow(url) {
+      statusEl.innerText = "Triggering...";
+      try {
+        const response = await fetch(url, { method: "POST" });
+        const data = await response.json();
+        statusEl.innerText = data.status || JSON.stringify(data);
+      } catch (err) {
+        statusEl.innerText = "Error: " + err.message;
+      }
+    }
+
+    document.getElementById("startBtn").addEventListener("click", () => {
+      triggerWorkflow("/api/start");
+    });
+
+    document.getElementById("stopBtn").addEventListener("click", () => {
+      triggerWorkflow("/api/stop");
+    });
+  </script>
+</body>
+</html>

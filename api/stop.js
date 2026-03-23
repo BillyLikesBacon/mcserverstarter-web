@@ -5,16 +5,8 @@ export default async function handler(req, res) {
 
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
   const REPO = "BillyLikesBacon/mcserverstarter";
-  const WORKFLOW_FILE = "selenium.yml"; // ← must match your workflow file name
-  const BRANCH = "main"; // your branch
-
-  const body = {
-    ref: BRANCH,
-    inputs: {
-      use_session_cache: "false",
-      start_or_stop: "true"  // "true" = start, "false" = stop
-    }
-  };
+  const WORKFLOW_FILE = "SeleniumSTOP.yml";  // Stop workflow
+  const BRANCH = "main";
 
   try {
     const response = await fetch(
@@ -25,18 +17,16 @@ export default async function handler(req, res) {
           Authorization: `Bearer ${GITHUB_TOKEN}`,
           Accept: "application/vnd.github+json",
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ ref: BRANCH }),
       }
     );
 
-    if (response.status === 204) {
-      return res.status(200).json({ status: "Workflow triggered!" });
-    } else {
-      const text = await response.text();
-      let data;
-      try { data = JSON.parse(text); } catch { data = { raw: text }; }
-      return res.status(response.status).json({ status: "Failed", detail: data });
-    }
+    if (response.status === 204) return res.status(200).json({ status: "Stop triggered!" });
+
+    const text = await response.text();
+    let data;
+    try { data = JSON.parse(text); } catch { data = { raw: text }; }
+    return res.status(response.status).json({ status: "Failed", detail: data });
   } catch (err) {
     return res.status(500).json({ status: "Error", detail: err.message });
   }
