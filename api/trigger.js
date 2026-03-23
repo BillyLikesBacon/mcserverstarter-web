@@ -25,10 +25,18 @@ export default async function handler(req, res) {
     );
 
     if (response.status === 204) {
+      // Success, no content returned
       res.status(200).json({ status: "Workflow triggered!" });
     } else {
-      const data = await response.json();
-      res.status(400).json({ status: "Failed", detail: data });
+      // Only try to parse JSON if there is content
+      const text = await response.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = { raw: text };
+      }
+      res.status(response.status).json({ status: "Failed", detail: data });
     }
   } catch (err) {
     res.status(500).json({ status: "Error", detail: err.message });
