@@ -16,14 +16,8 @@
       statusEl.innerText = "Triggering workflow...";
       try {
         const response = await fetch("/api/trigger", { method: "POST" });
-        // Try to parse JSON, but fallback to text if JSON fails
-        const text = await response.text();
-        try {
-          const data = JSON.parse(text);
-          statusEl.innerText = data.status || JSON.stringify(data);
-        } catch {
-          statusEl.innerText = text;
-        }
+        const data = await response.json();
+        statusEl.innerText = data.status || JSON.stringify(data);
       } catch (err) {
         statusEl.innerText = "Error: " + err.message;
       }
